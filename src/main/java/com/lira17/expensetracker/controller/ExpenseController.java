@@ -2,13 +2,11 @@ package com.lira17.expensetracker.controller;
 
 import com.lira17.expensetracker.dto.create.ExpenseCreateDto;
 import com.lira17.expensetracker.dto.get.ExpenseGetDto;
-import com.lira17.expensetracker.mapper.ExpenseCreateDtoMapper;
+import com.lira17.expensetracker.mapper.ExpenseModelDtoMapper;
 import com.lira17.expensetracker.service.ExpenseService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import static com.lira17.expensetracker.common.Constants.API;
@@ -33,17 +30,12 @@ public class ExpenseController {
     private ExpenseService expenseService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ExpenseModelDtoMapper mapper;
 
-    @Autowired
-    private ExpenseCreateDtoMapper mapper;
-
-    private static final Type LIST_OF_EXPENSES_TYPE = new TypeToken<List<ExpenseGetDto>>() {
-    }.getType();
 
     @GetMapping
     public List<ExpenseGetDto> getAllExpenses() {
-        return modelMapper.map(expenseService.getAllExpenses(), LIST_OF_EXPENSES_TYPE);
+        return mapper.mapToDtoList(expenseService.getAllExpenses());
     }
 
     @GetMapping(value = "/{id}")
@@ -52,15 +44,15 @@ public class ExpenseController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExpenseGetDto.class)) }),*/
             @ApiResponse(responseCode = "404", description = "Expense not found",
-                    content = @Content) })
+                    content = @Content)})
     public ExpenseGetDto getExpenseById(@PathVariable("id") Long id) {
-        return modelMapper.map(expenseService.getExpenseById(id), ExpenseGetDto.class);
+        return mapper.mapToDto(expenseService.getExpenseById(id));
     }
 
     @PostMapping
     public ExpenseGetDto createExpense(@RequestBody ExpenseCreateDto expenseCreateDto) {
         var expense = mapper.mapToModel(expenseCreateDto);
-        return modelMapper.map(expenseService.addExpense(expense), ExpenseGetDto.class);
+        return mapper.mapToDto(expenseService.addExpense(expense));
     }
 
     @DeleteMapping(value = "/{id}")

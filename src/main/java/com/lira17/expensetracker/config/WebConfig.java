@@ -10,7 +10,7 @@ import reactor.netty.http.client.HttpClient;
 @Configuration
 public class WebConfig {
     @Bean
-    public WebClient.Builder getWebClientBuilder(){
+    public WebClient.Builder getWebClientBuilder() {
         return WebClient.builder();
     }
 

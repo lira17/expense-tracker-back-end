@@ -7,8 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class IncomeGetDto extends BaseBalanceEntityGetDto {
-    IncomeCategoryGetDto category;
+@NoArgsConstructor
+public class CategoryGetDto {
+
+    private long id;
+
+    private String title;
 }

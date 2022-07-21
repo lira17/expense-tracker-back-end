@@ -46,7 +46,7 @@ public class ExpenseCategoryController {
 
     @GetMapping(value = "/{id}")
     public ExpenseCategoryGetDto getCategoryById(@PathVariable("id") Long id) {
-            return modelMapper.map(categoryService.getCategoryById(id), ExpenseCategoryGetDto.class);
+        return modelMapper.map(categoryService.getCategoryById(id), ExpenseCategoryGetDto.class);
     }
 
     @PostMapping

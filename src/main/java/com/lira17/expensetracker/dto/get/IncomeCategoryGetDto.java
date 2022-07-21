@@ -10,11 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class IncomeCategoryGetDto {
-
-    private long id;
-
-    private String title;
-
+public class IncomeCategoryGetDto extends CategoryGetDto {
     private IncomeCategoryType type;
 }
