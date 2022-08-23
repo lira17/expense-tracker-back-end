@@ -20,6 +20,16 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
+    public List<Expense> getMonthlyExpenses(int month, int year) {
+        return expenseRepository.findByMonthAndYearOrderByDate(month, year);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Expense> getYearExpenses(int year) {
+        return expenseRepository.findByYearOrderByDate(year);
+    }
+
+    @Transactional(readOnly = true)
     public Expense getExpenseById(long id) {
         return expenseRepository.findById(id).orElseThrow();
     }
@@ -34,4 +44,12 @@ public class ExpenseService {
         var expense = getExpenseById(id);
         expenseRepository.delete(expense);
     }
+
+    @Transactional(readOnly = true)
+    public List<Expense> getExpensesForReport(Integer month, Integer year) {
+        return month != null
+                ? getMonthlyExpenses(month, year)
+                : getYearExpenses(year);
+    }
+
 }

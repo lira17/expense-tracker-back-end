@@ -20,6 +20,15 @@ public class IncomeService {
     }
 
     @Transactional(readOnly = true)
+    public List<Income> getMonthlyIncomes(int month, int year) {
+        return incomeRepository.findByMonthAndYearOrderByDate(month, year);
+    }
+    @Transactional(readOnly = true)
+    public List<Income> getYearIncomes(int year) {
+        return incomeRepository.findByYearOrderByDate(year);
+    }
+
+    @Transactional(readOnly = true)
     public Income getIncomeById(long id) {
         return incomeRepository.findById(id).orElseThrow();
     }
@@ -33,5 +42,12 @@ public class IncomeService {
     public void deleteIncome(long id) {
         var income = getIncomeById(id);
         incomeRepository.delete(income);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Income> getIncomesForReport(Integer month, Integer year) {
+        return month != null
+                ? getMonthlyIncomes(month, year)
+                : getYearIncomes(year);
     }
 }
