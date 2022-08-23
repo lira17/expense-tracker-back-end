@@ -4,6 +4,12 @@ import com.lira17.expensetracker.dto.create.IncomeCategoryCreateDto;
 import com.lira17.expensetracker.dto.get.IncomeCategoryGetDto;
 import com.lira17.expensetracker.model.IncomeCategory;
 import com.lira17.expensetracker.service.IncomeCategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +29,7 @@ import java.util.List;
 import static com.lira17.expensetracker.common.Constants.API;
 
 @RestController
+@Tag(name = "Income Category", description = "Income Category API")
 @RequestMapping(API + "income-categories")
 public class IncomeCategoryController {
 
@@ -36,17 +43,24 @@ public class IncomeCategoryController {
     }.getType();
 
     @GetMapping
+    @Operation(summary = "Get all income categories")
     public List<IncomeCategoryGetDto> getAllCategories() {
         return modelMapper.map(incomeCategoryService.getAllCategories(), LIST_OF_CATEGORIES_TYPE);
     }
 
     @GetMapping(value = "/{id}")
+    @Operation(summary = "Get income category by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Income category is found",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IncomeCategoryGetDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Income category is not found", content = @Content)})
     public IncomeCategoryGetDto getCategoryById(@PathVariable("id") Long id) {
         return modelMapper.map(incomeCategoryService.getCategoryById(id), IncomeCategoryGetDto.class);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create an income category")
     public IncomeCategoryGetDto createCategory(@RequestBody IncomeCategoryCreateDto categoryCreateDto) {
         var category = modelMapper.map(categoryCreateDto, IncomeCategory.class);
         return modelMapper.map(incomeCategoryService.addCategory(category), IncomeCategoryGetDto.class);
@@ -54,6 +68,10 @@ public class IncomeCategoryController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete category by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Income category is not found", content = @Content)})
     public void deleteCategory(@PathVariable("id") Long id) {
         incomeCategoryService.deleteCategory(id);
     }

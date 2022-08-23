@@ -1,6 +1,7 @@
 package com.lira17.expensetracker.report.service;
 
 import com.lira17.expensetracker.dto.get.CategoryGetDto;
+import com.lira17.expensetracker.model.BaseBalanceEntity;
 import com.lira17.expensetracker.model.Expense;
 import com.lira17.expensetracker.model.ExpenseCategory;
 import com.lira17.expensetracker.model.Income;
@@ -37,8 +38,8 @@ public class ReportService {
         var expenses = expenseService.getExpensesForReport(month, year);
         var incomes = incomeService.getIncomesForReport(month, year);
 
-        var totalExpense = expenses.stream().map(Expense::getAmountInMainCurrency).reduce(Double::sum).orElseThrow();
-        var totalIncome = incomes.stream().map(Income::getAmountInMainCurrency).reduce(Double::sum).orElseThrow();
+        var totalExpense = getTotal(expenses);
+        var totalIncome = getTotal(incomes);
         var difference = totalIncome - totalExpense;
 
         report.setTotalExpense(totalExpense);
@@ -55,7 +56,9 @@ public class ReportService {
     }
 
     private void populateCategoryPercent(List<ReportBalanceEntity> list, double totalAmount) {
-        list.forEach(reportBalanceEntity -> reportBalanceEntity.setCategoryPercent(getCategoryPercent(reportBalanceEntity.getCategoryTotalAmount(), totalAmount)));
+        list.forEach(reportBalanceEntity ->
+                reportBalanceEntity.setCategoryPercent(
+                        getCategoryPercent(reportBalanceEntity.getCategoryTotalAmount(), totalAmount)));
     }
 
     private List<ReportBalanceEntity> getExpensesByCategories(List<Expense> expenses) {
@@ -90,5 +93,9 @@ public class ReportService {
 
     private double getCategoryPercent(double categoryAmount, double totalAmount) {
         return categoryAmount / totalAmount * 100;
+    }
+
+    private double getTotal(List<? extends BaseBalanceEntity> entities) {
+        return entities.stream().map(BaseBalanceEntity::getAmountInMainCurrency).reduce(Double::sum).orElseThrow();
     }
 }

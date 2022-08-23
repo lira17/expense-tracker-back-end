@@ -3,6 +3,7 @@ package com.lira17.expensetracker.mapper;
 import com.lira17.expensetracker.dto.create.ExpenseCreateDto;
 import com.lira17.expensetracker.dto.get.ExpenseGetDto;
 import com.lira17.expensetracker.model.Expense;
+import com.lira17.expensetracker.service.ExpenseCategoryService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,14 @@ import java.util.List;
 @Component
 public class ExpenseModelDtoMapper extends BaseBalanceEntityMapper implements ModelDtoMapper<Expense, ExpenseGetDto, ExpenseCreateDto> {
 
-    private static final Type LIST_OF_EXPENSES_TYPE = new TypeToken<List<ExpenseGetDto>>() {
-    }.getType();
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    ExpenseCategoryService expenseCategoryService;
+
+    private static final Type LIST_OF_EXPENSES_TYPE = new TypeToken<List<ExpenseGetDto>>() {
+    }.getType();
 
 
     @Override
@@ -33,6 +38,8 @@ public class ExpenseModelDtoMapper extends BaseBalanceEntityMapper implements Mo
     @Override
     public Expense mapToModel(ExpenseCreateDto dto) {
         var expense = modelMapper.map(dto, Expense.class);
+        var category = expenseCategoryService.getCategoryById(dto.getCategoryId());
+        expense.setCategory(category);
         populateBaseBalanceEntity(expense);
         return expense;
     }

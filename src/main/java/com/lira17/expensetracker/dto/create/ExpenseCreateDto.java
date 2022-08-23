@@ -24,5 +24,5 @@ public class ExpenseCreateDto {
 
     private Currency currency;
 
-    CategoryCreateDto category;
+    private long categoryId;
 }

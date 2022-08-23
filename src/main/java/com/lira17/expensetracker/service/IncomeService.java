@@ -23,6 +23,7 @@ public class IncomeService {
     public List<Income> getMonthlyIncomes(int month, int year) {
         return incomeRepository.findByMonthAndYearOrderByDate(month, year);
     }
+
     @Transactional(readOnly = true)
     public List<Income> getYearIncomes(int year) {
         return incomeRepository.findByYearOrderByDate(year);

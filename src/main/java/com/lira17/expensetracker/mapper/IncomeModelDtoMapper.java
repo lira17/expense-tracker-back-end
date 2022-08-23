@@ -3,6 +3,7 @@ package com.lira17.expensetracker.mapper;
 import com.lira17.expensetracker.dto.create.IncomeCreateDto;
 import com.lira17.expensetracker.dto.get.IncomeGetDto;
 import com.lira17.expensetracker.model.Income;
+import com.lira17.expensetracker.service.IncomeCategoryService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class IncomeModelDtoMapper extends BaseBalanceEntityMapper implements Mod
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    IncomeCategoryService incomeCategoryService;
 
     private static final Type LIST_OF_INCOMES_TYPE = new TypeToken<List<IncomeGetDto>>() {
     }.getType();
@@ -33,6 +37,8 @@ public class IncomeModelDtoMapper extends BaseBalanceEntityMapper implements Mod
     @Override
     public Income mapToModel(IncomeCreateDto dto) {
         var income = modelMapper.map(dto, Income.class);
+        var category = incomeCategoryService.getCategoryById(dto.getCategoryId());
+        income.setCategory(category);
         populateBaseBalanceEntity(income);
         return income;
     }
