@@ -6,8 +6,8 @@ import java.util.List;
 
 @Data
 public class Report {
-    private int year;
-    private int month;
+    private Integer year;
+    private Integer month;
     private double totalIncome;
     private double totalExpense;
     private boolean isBalancePositive;
