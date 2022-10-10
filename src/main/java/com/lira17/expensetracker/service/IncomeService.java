@@ -1,5 +1,6 @@
 package com.lira17.expensetracker.service;
 
+import com.lira17.expensetracker.exception.NotFoundException;
 import com.lira17.expensetracker.model.Income;
 import com.lira17.expensetracker.repository.IncomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class IncomeService {
 
     @Transactional(readOnly = true)
     public Income getIncomeById(long id) {
-        return incomeRepository.findById(id).orElseThrow();
+        return incomeRepository.findById(id).orElseThrow(() -> new NotFoundException(Income.class));
     }
 
     @Transactional

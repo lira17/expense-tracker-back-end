@@ -1,5 +1,6 @@
 package com.lira17.expensetracker.service;
 
+import com.lira17.expensetracker.exception.NotFoundException;
 import com.lira17.expensetracker.model.ExpenseCategory;
 import com.lira17.expensetracker.repository.ExpenseCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ExpenseCategoryService {
 
     @Transactional(readOnly = true)
     public ExpenseCategory getCategoryById(long id) {
-        return categoryRepository.findById(id).orElseThrow();
+        return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(ExpenseCategory.class));
     }
 
     @Transactional

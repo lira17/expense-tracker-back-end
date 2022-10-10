@@ -1,5 +1,6 @@
 package com.lira17.expensetracker.service;
 
+import com.lira17.expensetracker.exception.NotFoundException;
 import com.lira17.expensetracker.model.User;
 import com.lira17.expensetracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserById(long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.class));
     }
 
     @Transactional
     public User getUserByName(String name) {
-        return userRepository.findByName(name).orElseThrow();
+        return userRepository.findByName(name).orElseThrow(() -> new NotFoundException(User.class));
     }
 
     @Transactional
