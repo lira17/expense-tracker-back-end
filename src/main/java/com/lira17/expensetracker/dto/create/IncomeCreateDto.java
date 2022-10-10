@@ -24,5 +24,5 @@ public class IncomeCreateDto {
 
     private Currency currency;
 
-    private int categoryId;
+    private int category;
 }

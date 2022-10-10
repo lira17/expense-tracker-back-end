@@ -37,7 +37,7 @@ public class IncomeModelDtoMapper extends BaseBalanceEntityMapper implements Mod
     @Override
     public Income mapToModel(IncomeCreateDto dto) {
         var income = modelMapper.map(dto, Income.class);
-        var category = incomeCategoryService.getCategoryById(dto.getCategoryId());
+        var category = incomeCategoryService.getCategoryById(dto.getCategory());
         income.setCategory(category);
         populateBaseBalanceEntity(income);
         return income;

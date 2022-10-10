@@ -4,6 +4,8 @@ import com.lira17.expensetracker.exception.NotFoundException;
 import com.lira17.expensetracker.model.Income;
 import com.lira17.expensetracker.repository.IncomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +17,10 @@ public class IncomeService {
     @Autowired
     IncomeRepository incomeRepository;
 
+
     @Transactional(readOnly = true)
-    public List<Income> getAllIncomes() {
-        return incomeRepository.findAll();
+    public Page<Income> getAllIncomes(Pageable pageable) {
+        return incomeRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)

@@ -38,7 +38,7 @@ public class ExpenseModelDtoMapper extends BaseBalanceEntityMapper implements Mo
     @Override
     public Expense mapToModel(ExpenseCreateDto dto) {
         var expense = modelMapper.map(dto, Expense.class);
-        var category = expenseCategoryService.getCategoryById(dto.getCategoryId());
+        var category = expenseCategoryService.getCategoryById(dto.getCategory());
         expense.setCategory(category);
         populateBaseBalanceEntity(expense);
         return expense;
