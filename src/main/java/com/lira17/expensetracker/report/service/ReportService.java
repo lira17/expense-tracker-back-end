@@ -30,7 +30,7 @@ public class ReportService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Report getReport(Integer month, Integer year) {
+    public Report getReport(Integer month, Integer year, boolean detailed) {
         var report = new Report();
         report.setYear(year);
         report.setMonth(month);
@@ -46,11 +46,14 @@ public class ReportService {
         report.setTotalIncome(totalIncome);
         report.setBalancePositive(difference > 0);
         report.setDifference(difference);
-        report.setExpenses(getExpensesByCategories(expenses));
-        report.setIncomes(getIncomesByCategories(incomes));
 
-        populateCategoryPercent(report.getExpenses(), report.getTotalExpense());
-        populateCategoryPercent(report.getIncomes(), report.getTotalIncome());
+        if (detailed) {
+            report.setExpenses(getExpensesByCategories(expenses));
+            report.setIncomes(getIncomesByCategories(incomes));
+
+            populateCategoryPercent(report.getExpenses(), report.getTotalExpense());
+            populateCategoryPercent(report.getIncomes(), report.getTotalIncome());
+        }
 
         return report;
     }
@@ -96,6 +99,6 @@ public class ReportService {
     }
 
     private double getTotal(List<? extends BaseBalanceEntity> entities) {
-        return entities.stream().map(BaseBalanceEntity::getAmountInMainCurrency).reduce(Double::sum).orElseThrow();
+        return entities.stream().map(BaseBalanceEntity::getAmountInMainCurrency).reduce(Double::sum).orElse(0.0);
     }
 }
