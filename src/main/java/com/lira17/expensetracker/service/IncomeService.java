@@ -55,4 +55,9 @@ public class IncomeService {
                 ? getMonthlyIncomes(month, year)
                 : getYearIncomes(year);
     }
+
+    @Transactional(readOnly = true)
+    public Double getTotalIncomes() {
+        return incomeRepository.getTotalIncomesAmount().orElse(0.0);
+    }
 }

@@ -57,4 +57,9 @@ public class ExpenseService {
                 : getYearExpenses(year);
     }
 
+    @Transactional(readOnly = true)
+    public Double getTotalExpenses() {
+       return expenseRepository.getTotalExpensesAmount().orElse(0.0);
+    }
+
 }
