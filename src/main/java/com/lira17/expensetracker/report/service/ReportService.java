@@ -10,7 +10,6 @@ import com.lira17.expensetracker.report.model.Report;
 import com.lira17.expensetracker.report.model.ReportBalanceEntity;
 import com.lira17.expensetracker.service.ExpenseService;
 import com.lira17.expensetracker.service.IncomeService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +26,6 @@ public class ReportService {
     @Autowired
     private IncomeService incomeService;
 
-    @Autowired
-    private ModelMapper modelMapper;
 
     public Report getReport(Integer month, Integer year, boolean detailed) {
         var report = new Report();
@@ -70,7 +67,7 @@ public class ReportService {
                 .stream()
                 .map(expenseCategoryListEntry ->
                         ReportBalanceEntity.builder()
-                                .category(modelMapper.map(expenseCategoryListEntry.getKey(), CategoryGetDto.class))
+                                .category(new CategoryGetDto(expenseCategoryListEntry.getKey().getId(), expenseCategoryListEntry.getKey().getTitle()))
                                 .categoryTotalAmount(expenseCategoryListEntry.getValue()
                                         .stream()
                                         .map(Expense::getAmountInMainCurrency)
@@ -85,7 +82,7 @@ public class ReportService {
                 .stream()
                 .map(expenseCategoryListEntry ->
                         ReportBalanceEntity.builder()
-                                .category(modelMapper.map(expenseCategoryListEntry.getKey(), CategoryGetDto.class))
+                                .category(new CategoryGetDto(expenseCategoryListEntry.getKey().getId(), expenseCategoryListEntry.getKey().getTitle()))
                                 .categoryTotalAmount(expenseCategoryListEntry.getValue()
                                         .stream()
                                         .map(Income::getAmountInMainCurrency)

@@ -2,7 +2,7 @@ package com.lira17.expensetracker.controller;
 
 import com.lira17.expensetracker.dto.create.IncomeCategoryCreateDto;
 import com.lira17.expensetracker.dto.get.IncomeCategoryGetDto;
-import com.lira17.expensetracker.model.IncomeCategory;
+import com.lira17.expensetracker.mapper.IncomeCategoryMapper;
 import com.lira17.expensetracker.service.IncomeCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import static com.lira17.expensetracker.common.Constants.API;
@@ -37,15 +34,13 @@ public class IncomeCategoryController {
     private IncomeCategoryService incomeCategoryService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private IncomeCategoryMapper incomeCategoryMapper;
 
-    private static final Type LIST_OF_CATEGORIES_TYPE = new TypeToken<List<IncomeCategoryGetDto>>() {
-    }.getType();
 
     @GetMapping
     @Operation(summary = "Get all income categories")
     public List<IncomeCategoryGetDto> getAllCategories() {
-        return modelMapper.map(incomeCategoryService.getAllCategories(), LIST_OF_CATEGORIES_TYPE);
+        return incomeCategoryMapper.convertToDto(incomeCategoryService.getAllCategories());
     }
 
     @GetMapping(value = "/{id}")
@@ -55,15 +50,15 @@ public class IncomeCategoryController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IncomeCategoryGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "Income category is not found", content = @Content)})
     public IncomeCategoryGetDto getCategoryById(@PathVariable("id") Long id) {
-        return modelMapper.map(incomeCategoryService.getCategoryById(id), IncomeCategoryGetDto.class);
+        return incomeCategoryMapper.convertToDto(incomeCategoryService.getCategoryById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create an income category")
     public IncomeCategoryGetDto createCategory(@RequestBody IncomeCategoryCreateDto categoryCreateDto) {
-        var category = modelMapper.map(categoryCreateDto, IncomeCategory.class);
-        return modelMapper.map(incomeCategoryService.addCategory(category), IncomeCategoryGetDto.class);
+        var incomeCategory = incomeCategoryMapper.convertToCategory(categoryCreateDto);
+        return incomeCategoryMapper.convertToDto(incomeCategoryService.addCategory(incomeCategory));
     }
 
     @DeleteMapping(value = "/{id}")

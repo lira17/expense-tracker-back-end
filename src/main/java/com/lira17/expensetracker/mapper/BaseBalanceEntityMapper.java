@@ -14,7 +14,7 @@ public class BaseBalanceEntityMapper {
     @Autowired
     ExchangeService exchangeService;
 
-    protected void populateBaseBalanceEntity(BaseBalanceEntity balanceEntity) {
+    public void populateBaseBalanceEntity(BaseBalanceEntity balanceEntity) {
         if (balanceEntity.getDate() == null) {
             balanceEntity.setDate(LocalDate.now());
         }
@@ -38,6 +38,4 @@ public class BaseBalanceEntityMapper {
     private boolean isDifferentBalanceCurrency(BaseBalanceEntity balanceEntity) {
         return !balanceEntity.getMainCurrency().equals(balanceEntity.getCurrency());
     }
-
-
 }

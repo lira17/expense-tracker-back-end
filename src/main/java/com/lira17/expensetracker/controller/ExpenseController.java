@@ -2,7 +2,7 @@ package com.lira17.expensetracker.controller;
 
 import com.lira17.expensetracker.dto.create.ExpenseCreateDto;
 import com.lira17.expensetracker.dto.get.ExpenseGetDto;
-import com.lira17.expensetracker.mapper.ExpenseModelDtoMapper;
+import com.lira17.expensetracker.mapper.ExpenseMapper;
 import com.lira17.expensetracker.model.Expense;
 import com.lira17.expensetracker.service.ExpenseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,14 +39,14 @@ public class ExpenseController {
     private ExpenseService expenseService;
 
     @Autowired
-    private ExpenseModelDtoMapper mapper;
+    private ExpenseMapper expenseMapper;
 
 
     @GetMapping
     @Operation(summary = "Get all expenses")
     public List<ExpenseGetDto> getAllExpenses(@ParameterObject Pageable pageable) {
         Page<Expense> allExpenses = expenseService.getAllExpenses(pageable);
-        return mapper.mapToDtoList(allExpenses.getContent());
+        return expenseMapper.convertToDto(allExpenses.getContent());
     }
 
     @GetMapping(value = "/{id}")
@@ -57,7 +57,7 @@ public class ExpenseController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "Expense is not found", content = @Content)})
     public ExpenseGetDto getExpenseById(@PathVariable("id") Long id) {
-        return mapper.mapToDto(expenseService.getExpenseById(id));
+        return expenseMapper.convertToDto(expenseService.getExpenseById(id));
     }
 
     @PostMapping
@@ -68,8 +68,8 @@ public class ExpenseController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "Expense category is not found", content = @Content)})
     public ExpenseGetDto createExpense(@RequestBody ExpenseCreateDto expenseCreateDto) {
-        var expense = mapper.mapToModel(expenseCreateDto);
-        return mapper.mapToDto(expenseService.addExpense(expense));
+        var expense= expenseMapper.convertToExpense(expenseCreateDto);
+        return expenseMapper.convertToDto(expenseService.addExpense(expense));
     }
 
     @DeleteMapping(value = "/{id}")

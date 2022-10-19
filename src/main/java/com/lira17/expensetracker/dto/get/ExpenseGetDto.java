@@ -1,14 +1,10 @@
 package com.lira17.expensetracker.dto.get;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.lira17.expensetracker.exchange.Currency;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ExpenseGetDto extends BaseBalanceEntityGetDto {
-    ExpenseCategoryGetDto category;
+import java.time.LocalDate;
+
+public record ExpenseGetDto(long id, String title, String description, LocalDate date, double amount, Currency currency,
+                            Currency mainCurrency, double amountInMainCurrency, double rate,
+                            ExpenseCategoryGetDto category) {
 }

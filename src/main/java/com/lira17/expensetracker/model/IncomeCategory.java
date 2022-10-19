@@ -13,6 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
@@ -24,7 +27,14 @@ import java.util.List;
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "income_categories")
-public class IncomeCategory extends Category {
+public class IncomeCategory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(unique = true)
+    private String title;
 
     @Column
     @Enumerated(EnumType.STRING)

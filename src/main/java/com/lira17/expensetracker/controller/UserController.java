@@ -2,7 +2,7 @@ package com.lira17.expensetracker.controller;
 
 import com.lira17.expensetracker.dto.create.UserCreateDto;
 import com.lira17.expensetracker.dto.get.UserGetDto;
-import com.lira17.expensetracker.mapper.UserModelDtoMapper;
+import com.lira17.expensetracker.mapper.UserMapper;
 import com.lira17.expensetracker.security.JwtRequest;
 import com.lira17.expensetracker.security.JwtResponse;
 import com.lira17.expensetracker.security.JwtTokenUtil;
@@ -51,13 +51,13 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private UserModelDtoMapper mapper;
+    private UserMapper userMapper;
 
 
     @GetMapping
     @Operation(summary = "Get all users")
     public List<UserGetDto> getAllUsers() {
-        return mapper.mapToDtoList(userService.getAllUsers());
+        return userMapper.convertToDto(userService.getAllUsers());
     }
 
     @GetMapping(value = "/{id}")
@@ -68,15 +68,15 @@ public class UserController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "User is not found", content = @Content)})
     public UserGetDto getUserById(@PathVariable("id") Long id) {
-        return mapper.mapToDto(userService.getUserById(id));
+        return userMapper.convertToDto(userService.getUserById(id));
     }
 
     @PostMapping(value = "/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a user")
     public UserGetDto createUser(@RequestBody UserCreateDto userCreateDto) {
-        var user = mapper.mapToModel(userCreateDto);
-        return mapper.mapToDto(userService.addUser(user));
+        var user = userMapper.convertToUser(userCreateDto);
+        return userMapper.convertToDto(userService.addUser(user));
     }
 
     @DeleteMapping(value = "/{id}")

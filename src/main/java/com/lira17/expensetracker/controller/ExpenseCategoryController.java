@@ -3,7 +3,7 @@ package com.lira17.expensetracker.controller;
 import com.lira17.expensetracker.dto.create.ExpenseCategoryCreateDto;
 import com.lira17.expensetracker.dto.get.ExpenseCategoryGetDto;
 import com.lira17.expensetracker.exchange.ExchangeService;
-import com.lira17.expensetracker.model.ExpenseCategory;
+import com.lira17.expensetracker.mapper.ExpenseCategoryMapper;
 import com.lira17.expensetracker.service.ExpenseCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,8 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import static com.lira17.expensetracker.common.Constants.API;
@@ -41,15 +38,13 @@ public class ExpenseCategoryController {
     private ExchangeService exchangeService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ExpenseCategoryMapper expenseCategoryMapper;
 
-    private static final Type LIST_OF_CATEGORIES_TYPE = new TypeToken<List<ExpenseCategoryGetDto>>() {
-    }.getType();
 
     @GetMapping
     @Operation(summary = "Get all expense categories")
     public List<ExpenseCategoryGetDto> getAllCategories() {
-        return modelMapper.map(categoryService.getAllCategories(), LIST_OF_CATEGORIES_TYPE);
+        return expenseCategoryMapper.convertToDto(categoryService.getAllCategories());
     }
 
     @GetMapping(value = "/{id}")
@@ -60,15 +55,15 @@ public class ExpenseCategoryController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseCategoryGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "Expense category is not found", content = @Content)})
     public ExpenseCategoryGetDto getCategoryById(@PathVariable("id") Long id) {
-        return modelMapper.map(categoryService.getCategoryById(id), ExpenseCategoryGetDto.class);
+        return expenseCategoryMapper.convertToDto(categoryService.getCategoryById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create expense category")
     public ExpenseCategoryGetDto createCategory(@RequestBody ExpenseCategoryCreateDto categoryCreateDto) {
-        var category = modelMapper.map(categoryCreateDto, ExpenseCategory.class);
-        return modelMapper.map(categoryService.addCategory(category), ExpenseCategoryGetDto.class);
+        var category = expenseCategoryMapper.convertToCategory(categoryCreateDto);
+        return expenseCategoryMapper.convertToDto(categoryService.addCategory(category));
     }
 
     @DeleteMapping(value = "/{id}")

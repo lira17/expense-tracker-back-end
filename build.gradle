@@ -26,13 +26,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
-	// https://mvnrepository.com/artifact/org.modelmapper/modelmapper
-	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.0'
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
 	//implementation group: 'org.postgresql', name: 'postgresql', version: '42.4'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	implementation "org.mapstruct:mapstruct:1.5.2.Final"
 
 
 	compileOnly 'org.liquibase:liquibase-core:3.8.4'
@@ -43,8 +42,10 @@ dependencies {
 
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	//testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"
 }
 
 tasks.named('test') {

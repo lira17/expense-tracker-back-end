@@ -2,7 +2,7 @@ package com.lira17.expensetracker.controller;
 
 import com.lira17.expensetracker.dto.create.IncomeCreateDto;
 import com.lira17.expensetracker.dto.get.IncomeGetDto;
-import com.lira17.expensetracker.mapper.IncomeModelDtoMapper;
+import com.lira17.expensetracker.mapper.IncomeMapper;
 import com.lira17.expensetracker.model.Income;
 import com.lira17.expensetracker.service.IncomeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,14 +38,14 @@ public class IncomeController {
     private IncomeService incomeService;
 
     @Autowired
-    private IncomeModelDtoMapper mapper;
+    private IncomeMapper incomeMapper;
 
 
     @GetMapping
     @Operation(summary = "Get all incomes")
     public List<IncomeGetDto> getAllIncomes(@ParameterObject Pageable pageable) {
         Page<Income> allIncomes = incomeService.getAllIncomes(pageable);
-        return mapper.mapToDtoList(allIncomes.getContent());
+        return incomeMapper.convertToDto(allIncomes.getContent());
     }
 
     @GetMapping(value = "/{id}")
@@ -56,7 +56,7 @@ public class IncomeController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IncomeGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "Income is not found", content = @Content)})
     public IncomeGetDto getIncomeById(@PathVariable("id") Long id) {
-        return mapper.mapToDto(incomeService.getIncomeById(id));
+        return incomeMapper.convertToDto(incomeService.getIncomeById(id));
     }
 
     @PostMapping
@@ -67,8 +67,8 @@ public class IncomeController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IncomeGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "Income category is not found", content = @Content)})
     public IncomeGetDto createIncome(@RequestBody IncomeCreateDto incomeCreateDto) {
-        var income = mapper.mapToModel(incomeCreateDto);
-        return mapper.mapToDto(incomeService.addIncome(income));
+        var income = incomeMapper.convertToIncome(incomeCreateDto);
+        return incomeMapper.convertToDto(incomeService.addIncome(income));
     }
 
     @DeleteMapping(value = "/{id}")
