@@ -18,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -27,7 +28,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "expense_categories")
-public class ExpenseCategory {
+public class ExpenseCategory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
