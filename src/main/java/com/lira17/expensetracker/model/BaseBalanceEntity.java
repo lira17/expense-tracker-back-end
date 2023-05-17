@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
@@ -45,7 +46,7 @@ public abstract class BaseBalanceEntity implements Serializable {
     private Currency currency;
 
     @Column
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Currency mainCurrency;
 
     @Column
@@ -53,4 +54,10 @@ public abstract class BaseBalanceEntity implements Serializable {
 
     @Column
     private double rate;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
