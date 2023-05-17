@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import java.util.List;
 
@@ -66,11 +66,24 @@ public class ExpenseController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Expense is created",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseGetDto.class))}),
-            @ApiResponse(responseCode = "404", description = "Expense category is not found", content = @Content)})
+            @ApiResponse(responseCode = "404", description = "Expense  is not found", content = @Content)})
     public ExpenseGetDto createExpense(@RequestBody ExpenseCreateDto expenseCreateDto) {
-        var expense= expenseMapper.convertToExpense(expenseCreateDto);
+        var expense = expenseMapper.convertToExpense(expenseCreateDto);
         return expenseMapper.convertToDto(expenseService.addExpense(expense));
     }
+
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update an expense")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense is updated",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseGetDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Expense is not found", content = @Content)})
+    public ExpenseGetDto updateExpense(@PathVariable("id") Long id, @RequestBody ExpenseCreateDto expenseCreateDto) {
+        var expense = expenseMapper.convertToExpense(expenseCreateDto);
+        return expenseMapper.convertToDto(expenseService.updateExpense(id, expense));
+    }
+
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)

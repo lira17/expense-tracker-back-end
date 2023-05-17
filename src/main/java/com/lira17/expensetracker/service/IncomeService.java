@@ -44,6 +44,12 @@ public class IncomeService {
     }
 
     @Transactional
+    public Income updateIncome(long id, Income newIncome) {
+        Income oldIncome = getIncomeById(id);
+        return incomeRepository.save(updateOldIncome(newIncome, oldIncome));
+    }
+
+    @Transactional
     public void deleteIncome(long id) {
         var income = getIncomeById(id);
         incomeRepository.delete(income);
@@ -59,5 +65,20 @@ public class IncomeService {
     @Transactional(readOnly = true)
     public Double getTotalIncomes() {
         return incomeRepository.getTotalIncomesAmount().orElse(0.0);
+    }
+
+    private Income updateOldIncome(Income newIncome, Income oldIncome) {
+        oldIncome.setDate(newIncome.getDate());
+        oldIncome.setAmount(newIncome.getAmount());
+        oldIncome.setRate(newIncome.getRate());
+        oldIncome.setMonth(newIncome.getMonth());
+        oldIncome.setYear(newIncome.getYear());
+        oldIncome.setCategory(newIncome.getCategory());
+        oldIncome.setCurrency(newIncome.getCurrency());
+        oldIncome.setAmountInMainCurrency(newIncome.getAmountInMainCurrency());
+        oldIncome.setDescription(newIncome.getDescription());
+        oldIncome.setTitle(newIncome.getTitle());
+        oldIncome.setMainCurrency(newIncome.getMainCurrency());
+        return oldIncome;
     }
 }

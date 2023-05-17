@@ -45,9 +45,15 @@ public class ExpenseCategory implements Serializable {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Expense> expenses;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at",
+            columnDefinition = "TIMESTAMP",
+            insertable = false,
+            updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at",
+            columnDefinition = "TIMESTAMP",
+            insertable = false,
+            updatable = false)
     private LocalDateTime updatedAt;
 }

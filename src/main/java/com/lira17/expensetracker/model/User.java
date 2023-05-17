@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -35,4 +36,16 @@ public class User implements Serializable {
 
     @Column(unique = true)
     private String email;
+
+    @Column(name = "created_at",
+            columnDefinition = "TIMESTAMP",
+            insertable = false,
+            updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at",
+            columnDefinition = "TIMESTAMP",
+            insertable = false,
+            updatable = false)
+    private LocalDateTime updatedAt;
 }

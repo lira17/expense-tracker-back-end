@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -69,6 +70,19 @@ public class IncomeController {
     public IncomeGetDto createIncome(@RequestBody IncomeCreateDto incomeCreateDto) {
         var income = incomeMapper.convertToIncome(incomeCreateDto);
         return incomeMapper.convertToDto(incomeService.addIncome(income));
+    }
+
+
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update an income")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Income is updated",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IncomeGetDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Income is not found", content = @Content)})
+    public IncomeGetDto updateExpense(@PathVariable("id") Long id, @RequestBody IncomeCreateDto incomeCreateDto) {
+        var income = incomeMapper.convertToIncome(incomeCreateDto);
+        return incomeMapper.convertToDto(incomeService.updateIncome(id, income));
     }
 
     @DeleteMapping(value = "/{id}")

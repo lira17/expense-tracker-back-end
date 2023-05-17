@@ -13,26 +13,39 @@ import java.util.List;
 public class ExpenseCategoryService {
 
     @Autowired
-    ExpenseCategoryRepository categoryRepository;
+    ExpenseCategoryRepository expenseCategoryRepository;
 
     @Transactional(readOnly = true)
     public List<ExpenseCategory> getAllCategories() {
-        return categoryRepository.findAll();
+        return expenseCategoryRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     public ExpenseCategory getCategoryById(long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(ExpenseCategory.class));
+        return expenseCategoryRepository.findById(id).orElseThrow(() -> new NotFoundException(ExpenseCategory.class));
     }
 
     @Transactional
     public ExpenseCategory addCategory(ExpenseCategory category) {
-        return categoryRepository.save(category);
+        return expenseCategoryRepository.save(category);
+    }
+
+
+    @Transactional
+    public ExpenseCategory updateCategory(long id, ExpenseCategory newCategory) {
+        var oldCategory = getCategoryById(id);
+        return expenseCategoryRepository.save(updateOldCategory(newCategory, oldCategory));
     }
 
     @Transactional
     public void deleteCategory(long id) {
         var category = getCategoryById(id);
-        categoryRepository.delete(category);
+        expenseCategoryRepository.delete(category);
+    }
+
+    private ExpenseCategory updateOldCategory(ExpenseCategory newCategory, ExpenseCategory oldCategory) {
+        oldCategory.setTitle(newCategory.getTitle());
+        oldCategory.setType(newCategory.getType());
+        return oldCategory;
     }
 }

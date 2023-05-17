@@ -31,8 +31,20 @@ public class IncomeCategoryService {
     }
 
     @Transactional
+    public IncomeCategory updateCategory(long id, IncomeCategory newCategory) {
+        var oldCategory = getCategoryById(id);
+        return incomeCategoryRepository.save(updateOldCategory(newCategory, oldCategory));
+    }
+
+    @Transactional
     public void deleteCategory(long id) {
         var category = getCategoryById(id);
         incomeCategoryRepository.delete(category);
+    }
+
+    private IncomeCategory updateOldCategory(IncomeCategory newCategory, IncomeCategory oldCategory) {
+        oldCategory.setTitle(newCategory.getTitle());
+        oldCategory.setType(newCategory.getType());
+        return oldCategory;
     }
 }

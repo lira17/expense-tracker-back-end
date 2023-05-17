@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,7 +33,7 @@ import static com.lira17.expensetracker.common.Constants.API;
 public class ExpenseCategoryController {
 
     @Autowired
-    private ExpenseCategoryService categoryService;
+    private ExpenseCategoryService expenseCategoryService;
 
     @Autowired
     private ExchangeService exchangeService;
@@ -44,7 +45,7 @@ public class ExpenseCategoryController {
     @GetMapping
     @Operation(summary = "Get all expense categories")
     public List<ExpenseCategoryGetDto> getAllCategories() {
-        return expenseCategoryMapper.convertToDto(categoryService.getAllCategories());
+        return expenseCategoryMapper.convertToDto(expenseCategoryService.getAllCategories());
     }
 
     @GetMapping(value = "/{id}")
@@ -55,15 +56,27 @@ public class ExpenseCategoryController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseCategoryGetDto.class))}),
             @ApiResponse(responseCode = "404", description = "Expense category is not found", content = @Content)})
     public ExpenseCategoryGetDto getCategoryById(@PathVariable("id") Long id) {
-        return expenseCategoryMapper.convertToDto(categoryService.getCategoryById(id));
+        return expenseCategoryMapper.convertToDto(expenseCategoryService.getCategoryById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create expense category")
+    @Operation(summary = "Create an expense category")
     public ExpenseCategoryGetDto createCategory(@RequestBody ExpenseCategoryCreateDto categoryCreateDto) {
         var category = expenseCategoryMapper.convertToCategory(categoryCreateDto);
-        return expenseCategoryMapper.convertToDto(categoryService.addCategory(category));
+        return expenseCategoryMapper.convertToDto(expenseCategoryService.addCategory(category));
+    }
+
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update an expense category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense category is updated",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseCategoryGetDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Expense category is not found", content = @Content)})
+    public ExpenseCategoryGetDto updateCategory(@PathVariable("id") Long id, @RequestBody ExpenseCategoryCreateDto expenseCategoryCreateDto) {
+        var category = expenseCategoryMapper.convertToCategory(expenseCategoryCreateDto);
+        return expenseCategoryMapper.convertToDto(expenseCategoryService.updateCategory(id, category));
     }
 
     @DeleteMapping(value = "/{id}")
@@ -73,6 +86,6 @@ public class ExpenseCategoryController {
             @ApiResponse(responseCode = "200", content = @Content),
             @ApiResponse(responseCode = "404", description = "Expense category is not found", content = @Content)})
     public void deleteCategory(@PathVariable("id") Long id) {
-        categoryService.deleteCategory(id);
+        expenseCategoryService.deleteCategory(id);
     }
 }
