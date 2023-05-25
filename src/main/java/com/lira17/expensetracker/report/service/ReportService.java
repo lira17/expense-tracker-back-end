@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.lira17.expensetracker.report.util.ReportUtil.isBalancePositive;
+
 @Service
 public class ReportService {
 
@@ -41,7 +43,7 @@ public class ReportService {
 
         report.setTotalExpense(totalExpense);
         report.setTotalIncome(totalIncome);
-        report.setBalancePositive(difference > 0);
+        report.setBalancePositive(isBalancePositive(difference));
         report.setDifference(difference);
 
         if (detailed) {

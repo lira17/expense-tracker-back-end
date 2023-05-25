@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.lira17.expensetracker.report.util.ReportUtil.isBalancePositive;
+
 @Service
 public class TotalBalanceService {
 
@@ -24,6 +26,6 @@ public class TotalBalanceService {
     @Transactional(readOnly = true)
     public TotalBalance getTotalBalance() {
         double balanceAmount = incomeService.getTotalIncomes() - expenseService.getTotalExpenses();
-        return new TotalBalance(balanceAmount, exchangeService.getMainCurrency(), balanceAmount > 0);
+        return new TotalBalance(balanceAmount, exchangeService.getMainCurrency(), isBalancePositive(balanceAmount));
     }
 }
