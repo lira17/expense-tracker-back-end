@@ -8,7 +8,7 @@ group = 'com.lira17'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
-apply from: 'liquibase.gradle'
+//apply from: 'liquibase.gradle'
 
 configurations {
 	compileOnly {
@@ -34,7 +34,10 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:1.5.2.Final"
 
 
-	compileOnly 'org.liquibase:liquibase-core:3.8.4'
+	//implementation 'org.liquibase:liquibase-core:3.8.4'
+	//compileOnly "org.liquibase:liquibase-core:4.4.2"
+	//compileOnly "org.liquibase.ext:liquibase-hibernate5:3.8.4"
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -45,6 +48,8 @@ dependencies {
 	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation "org.testcontainers:postgresql:1.18.1"
+	testImplementation "org.testcontainers:junit-jupiter:1.18.1"
 	//testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"
 }
 
