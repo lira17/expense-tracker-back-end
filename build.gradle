@@ -53,6 +53,8 @@ dependencies {
 	//testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"
 }
 
-tasks.named('test') {
+test {
+	environment "EXCHANGE_TOKEN",project.property('TOKEN')
+	environment "JWT_SECRET", project.property('SECRET')
 	useJUnitPlatform()
 }

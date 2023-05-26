@@ -1,7 +1,11 @@
 # Getting Started
-1. Install Docker.
-2. Go to the project folder.
-3. Build the project by gradle task 'build'.
-4. Run _docker-compose up --build_.
-5. Open http://localhost:8080/api/categories.
-6. Swagger http://localhost:8080/swagger-ui/index.html
+1. Get you Exchange API token here https://exchangeratesapi.io/
+2. Install Docker.
+3. Go to the project folder.
+4. Create .env file in the root folder and specify environment variables
+![img.png](img.png)
+5. Build the project by gradle task 'build'
+   *gradle build -PTOKEN=your_exchange_service_token  -PSECRET=your_jwt_secret*
+6. Run *docker-compose --env-file=.env up --build*
+7. Open http://localhost:8082/api/categories.
+8. Swagger http://localhost:8082/swagger-ui/index.html
