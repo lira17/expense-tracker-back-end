@@ -1,10 +1,10 @@
 package com.lira17.expensetracker.controller;
 
+import com.lira17.expensetracker.report.model.FullReport;
 import com.lira17.expensetracker.report.model.Report;
 import com.lira17.expensetracker.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,24 +25,24 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @GetMapping
+    @GetMapping(value = "/month")
     @Operation(summary = "Get expenses and incomes report for month/year")
-    public Report getReport(@RequestParam(required = false) String month, @RequestParam String year) {
-        return reportService.getReport(getMonthParam(month), Integer.parseInt(year), true);
+    public FullReport getFullReportForMonth(@RequestParam int month, @RequestParam int year) {
+        return reportService.getFullReportForMonth(month, year);
     }
 
-    @GetMapping(value = "/months")
+    @GetMapping(value = "/year")
+    @Operation(summary = "Get expenses and incomes report for month/year")
+    public FullReport getFullReportForYear(@RequestParam int year) {
+        return reportService.getFullReportForYear(year);
+    }
+
+    @GetMapping(value = "/year/months")
     @Operation(summary = "Get expenses and incomes report for all months of the year")
-    public List<Report> getMonthsForYearReport(@RequestParam int year) {
+    public List<Report> getMonthsReportsForYearReport(@RequestParam int year) {
         return IntStream.range(1, getLastMonthValue(year))
-                .mapToObj(month -> reportService.getReport(month, year, false))
+                .mapToObj(month -> reportService.getReportForMonth(month, year))
                 .toList();
-    }
-
-    private Integer getMonthParam(String month) {
-        return StringUtils.isNotEmpty(month)
-                ? Integer.parseInt(month)
-                : null;
     }
 
     private int getLastMonthValue(int year) {

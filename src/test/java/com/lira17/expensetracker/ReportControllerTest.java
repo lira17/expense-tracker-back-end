@@ -19,15 +19,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(initializers = {TestContainersInitializer.class})
 public class ReportControllerTest {
 
+    private static final String REPORT_YEAR_API_URL = "/api/report/year";
+    private static final String REPORT_MONTH_API_URL = "/api/report/month";
+    private static final String REPORT_MONTHS_API_URL = "/api/report/year/months";
+
     @Autowired
     MockMvc mockMvc;
 
-    private static final String REPORT_API_URL = "/api/report";
-    private static final String REPORT_MONTHS_API_URL = "/api/report/months";
-
     @Test
-    void getReportRequest_whenReportForYearRequested_thenReturnsReportForYear() throws Exception {
-        mockMvc.perform(get(REPORT_API_URL).queryParam("year", "2022"))
+    void getReportRequest_whenFullReportForYearRequested_thenReturnsFullReportForYear() throws Exception {
+        mockMvc.perform(get(REPORT_YEAR_API_URL).queryParam("year", "2022"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.year").value("2022"))
@@ -44,8 +45,8 @@ public class ReportControllerTest {
     }
 
     @Test
-    void getReportRequest_whenReportForMonthRequested_thenReturnsReportForMonth() throws Exception {
-        mockMvc.perform(get(REPORT_API_URL).queryParam("year", "2022").queryParam("month", "1"))
+    void getReportRequest_whenReportFullForMonthRequested_thenReturnsFullReportForMonth() throws Exception {
+        mockMvc.perform(get(REPORT_MONTH_API_URL).queryParam("year", "2022").queryParam("month", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.year").value("2022"))
@@ -62,7 +63,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void getReportMonthlyRequest_whenReportForYearRequested_thenReturnsMonthlyReportForYear() throws Exception {
+    void getReportMonthlyRequest_whenMonthlyReportForYearRequested_thenReturnsMonthlyReportForYear() throws Exception {
         mockMvc.perform(get(REPORT_MONTHS_API_URL).queryParam("year", "2022"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))

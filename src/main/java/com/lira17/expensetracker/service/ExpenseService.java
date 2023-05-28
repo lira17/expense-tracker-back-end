@@ -56,13 +56,6 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
-    public List<Expense> getExpensesForReport(Integer month, Integer year) {
-        return month != null
-                ? getMonthlyExpenses(month, year)
-                : getYearExpenses(year);
-    }
-
-    @Transactional(readOnly = true)
     public Double getTotalExpenses() {
         return expenseRepository.getTotalExpensesAmount().orElse(0.0);
     }

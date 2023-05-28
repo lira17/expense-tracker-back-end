@@ -2,7 +2,6 @@ package com.lira17.expensetracker.report.model;
 
 import lombok.Data;
 
-import java.util.List;
 
 @Data
 public class Report {
@@ -12,6 +11,4 @@ public class Report {
     private double totalExpense;
     private boolean isBalancePositive;
     private double difference;
-    private List<ReportBalanceEntity> expenses;
-    private List<ReportBalanceEntity> incomes;
 }

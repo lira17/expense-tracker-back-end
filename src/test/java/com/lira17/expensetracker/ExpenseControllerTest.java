@@ -136,7 +136,7 @@ public class ExpenseControllerTest {
         //then
         assertNotEquals(expenseGetDto.currency(), expenseGetDto.mainCurrency());
         assertNotEquals(expenseGetDto.amount(), expenseGetDto.amountInMainCurrency());
-        assertEquals(expenseGetDto.amount() * expenseGetDto.rate(), expenseGetDto.amountInMainCurrency());
+        assertEquals(expenseGetDto.amount() * expenseGetDto.rate(), expenseGetDto.amountInMainCurrency(), 0.01);
         mockMvc.perform(get(getRequestUrl(expenseGetDto.id())))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))

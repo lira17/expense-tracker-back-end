@@ -6,6 +6,7 @@ import com.lira17.expensetracker.model.Expense;
 import com.lira17.expensetracker.model.ExpenseCategory;
 import com.lira17.expensetracker.model.Income;
 import com.lira17.expensetracker.model.IncomeCategory;
+import com.lira17.expensetracker.report.model.FullReport;
 import com.lira17.expensetracker.report.model.Report;
 import com.lira17.expensetracker.report.model.ReportBalanceEntity;
 import com.lira17.expensetracker.service.ExpenseService;
@@ -28,15 +29,53 @@ public class ReportService {
     @Autowired
     private IncomeService incomeService;
 
+    public Report getReportForMonth(Integer month, Integer year) {
+        var expenses = expenseService.getMonthlyExpenses(month, year);
+        var incomes = incomeService.getMonthlyIncomes(month, year);
+        var report = getReport(expenses, incomes);
 
-    public Report getReport(Integer month, Integer year, boolean detailed) {
-        var report = new Report();
         report.setYear(year);
         report.setMonth(month);
 
-        var expenses = expenseService.getExpensesForReport(month, year);
-        var incomes = incomeService.getIncomesForReport(month, year);
+        return report;
+    }
 
+    public FullReport getFullReportForMonth(Integer month, Integer year) {
+        var expenses = expenseService.getMonthlyExpenses(month, year);
+        var incomes = incomeService.getMonthlyIncomes(month, year);
+        var fullReport = getFullReport(expenses, incomes);
+
+        fullReport.setYear(year);
+        fullReport.setMonth(month);
+
+        return fullReport;
+    }
+
+    public FullReport getFullReportForYear(Integer year) {
+        var expenses = expenseService.getYearExpenses(year);
+        var incomes = incomeService.getYearIncomes(year);
+        var fullReport = getFullReport(expenses, incomes);
+
+        fullReport.setYear(year);
+
+        return fullReport;
+    }
+
+    private FullReport getFullReport(List<Expense> expenses, List<Income> incomes) {
+        var report = getReport(expenses, incomes);
+        var fullReport = new FullReport(report);
+
+        fullReport.setExpenses(getExpensesByCategories(expenses));
+        fullReport.setIncomes(getIncomesByCategories(incomes));
+
+        populateCategoryPercent(fullReport.getExpenses(), fullReport.getTotalExpense());
+        populateCategoryPercent(fullReport.getIncomes(), report.getTotalIncome());
+
+        return fullReport;
+    }
+
+    public Report getReport(List<Expense> expenses, List<Income> incomes) {
+        var report = new Report();
         var totalExpense = getTotal(expenses);
         var totalIncome = getTotal(incomes);
         var difference = totalIncome - totalExpense;
@@ -45,14 +84,6 @@ public class ReportService {
         report.setTotalIncome(totalIncome);
         report.setBalancePositive(isBalancePositive(difference));
         report.setDifference(difference);
-
-        if (detailed) {
-            report.setExpenses(getExpensesByCategories(expenses));
-            report.setIncomes(getIncomesByCategories(incomes));
-
-            populateCategoryPercent(report.getExpenses(), report.getTotalExpense());
-            populateCategoryPercent(report.getIncomes(), report.getTotalIncome());
-        }
 
         return report;
     }
