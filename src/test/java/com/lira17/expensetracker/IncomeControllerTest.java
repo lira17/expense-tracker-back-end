@@ -1,7 +1,9 @@
 package com.lira17.expensetracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lira17.expensetracker.common.IncomeCategoryType;
 import com.lira17.expensetracker.dto.create.IncomeCreateDto;
+import com.lira17.expensetracker.dto.get.IncomeCategoryGetDto;
 import com.lira17.expensetracker.dto.get.IncomeGetDto;
 import com.lira17.expensetracker.exchange.Currency;
 import org.junit.Ignore;
@@ -92,7 +94,7 @@ public class IncomeControllerTest {
         //when
         MvcResult result = mockMvc
                 .perform(post(INCOMES_API_URL)
-                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "gift", LocalDate.now(), 5000.0, Currency.RSD, 3)))
+                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "gift", LocalDate.now(), 5000.0, Currency.RSD, new IncomeCategoryGetDto(3, "", IncomeCategoryType.ONE_TIME))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -126,7 +128,7 @@ public class IncomeControllerTest {
         //when
         MvcResult result = mockMvc
                 .perform(post(INCOMES_API_URL)
-                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 5.0, Currency.EUR, 3)))
+                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 5.0, Currency.EUR, new IncomeCategoryGetDto(3, "", IncomeCategoryType.ONE_TIME))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -162,7 +164,7 @@ public class IncomeControllerTest {
         //given - creating new category
         MvcResult result = mockMvc
                 .perform(post(INCOMES_API_URL)
-                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 5.0, Currency.EUR, 3)))
+                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 5.0, Currency.EUR, new IncomeCategoryGetDto(3, "", IncomeCategoryType.ONE_TIME))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -171,7 +173,7 @@ public class IncomeControllerTest {
 
         //when
         MvcResult resultUpdated = mockMvc.perform(put(getRequestUrl(incomeGetDto.id()))
-                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 7.0, Currency.EUR, 3)))
+                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 7.0, Currency.EUR, new IncomeCategoryGetDto(3, "", IncomeCategoryType.ONE_TIME))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -204,7 +206,7 @@ public class IncomeControllerTest {
     @Test
     void updateIncome_whenIncomeIdIsNotPresentAndDtoIsOk_thenReturnsNotFoundError() throws Exception {
         mockMvc.perform(put(getRequestUrl(107))
-                        .content(mapper.writeValueAsString(new IncomeCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, 2)))
+                        .content(mapper.writeValueAsString(new IncomeCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, new IncomeCategoryGetDto(3, "", IncomeCategoryType.ONE_TIME))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -220,7 +222,7 @@ public class IncomeControllerTest {
         //given - creating new expense
         MvcResult result = mockMvc
                 .perform(post(INCOMES_API_URL)
-                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 5.0, Currency.EUR, 3)))
+                        .content(mapper.writeValueAsString(new IncomeCreateDto("Gift", "Wednesday gift", LocalDate.now(), 5.0, Currency.EUR, new IncomeCategoryGetDto(3, "", IncomeCategoryType.ONE_TIME))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();

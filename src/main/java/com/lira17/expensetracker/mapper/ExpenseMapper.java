@@ -32,7 +32,7 @@ public abstract class ExpenseMapper {
     @Mapping(target = "mainCurrency", ignore = true)
     @Mapping(target = "amountInMainCurrency", ignore = true)
     @Mapping(target = "rate", ignore = true)
-    @Mapping(target = "category", expression = "java(expenseCategoryService.getCategoryById(expenseCreateDto.category()))")
+    @Mapping(target = "category", expression = "java(expenseCategoryService.getCategoryById(expenseCreateDto.category().id()))")
     public abstract Expense convertToExpense(ExpenseCreateDto expenseCreateDto);
 
     @AfterMapping

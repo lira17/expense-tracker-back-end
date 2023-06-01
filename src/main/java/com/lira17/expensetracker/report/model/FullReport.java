@@ -17,5 +17,6 @@ public class FullReport extends Report {
         super.setTotalExpense(report.getTotalExpense());
         super.setTotalIncome(report.getTotalIncome());
         super.setBalancePositive(report.isBalancePositive());
+        super.setMainCurrency(report.getMainCurrency());
     }
 }

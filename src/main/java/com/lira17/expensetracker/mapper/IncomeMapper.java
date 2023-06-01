@@ -32,7 +32,7 @@ public abstract class IncomeMapper {
     @Mapping(target = "mainCurrency", ignore = true)
     @Mapping(target = "amountInMainCurrency", ignore = true)
     @Mapping(target = "rate", ignore = true)
-    @Mapping(target = "category", expression = "java(incomeCategoryService.getCategoryById(incomeCreateDto.category()))")
+    @Mapping(target = "category", expression = "java(incomeCategoryService.getCategoryById(incomeCreateDto.category().id()))")
     public abstract Income convertToIncome(IncomeCreateDto incomeCreateDto);
 
     @AfterMapping

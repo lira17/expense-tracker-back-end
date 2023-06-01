@@ -1,7 +1,9 @@
 package com.lira17.expensetracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lira17.expensetracker.common.ExpenseCategoryType;
 import com.lira17.expensetracker.dto.create.ExpenseCreateDto;
+import com.lira17.expensetracker.dto.get.ExpenseCategoryGetDto;
 import com.lira17.expensetracker.dto.get.ExpenseGetDto;
 import com.lira17.expensetracker.exchange.Currency;
 import org.junit.Ignore;
@@ -92,7 +94,7 @@ public class ExpenseControllerTest {
         //when
         MvcResult result = mockMvc
                 .perform(post(EXPENSE_API_URL)
-                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Beer", "Friday beer", LocalDate.now(), 500.0, Currency.RSD, 2)))
+                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Beer", "Friday beer", LocalDate.now(), 500.0, Currency.RSD, new ExpenseCategoryGetDto(2,"", ExpenseCategoryType.ESSENTIAL))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -126,7 +128,7 @@ public class ExpenseControllerTest {
         //when
         MvcResult result = mockMvc
                 .perform(post(EXPENSE_API_URL)
-                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, 2)))
+                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, new ExpenseCategoryGetDto(2,"", ExpenseCategoryType.ESSENTIAL))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -162,7 +164,7 @@ public class ExpenseControllerTest {
         //given - creating new category
         MvcResult result = mockMvc
                 .perform(post(EXPENSE_API_URL)
-                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, 2)))
+                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, new ExpenseCategoryGetDto(2,"", ExpenseCategoryType.ESSENTIAL))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -171,7 +173,7 @@ public class ExpenseControllerTest {
 
         //when
         MvcResult resultUpdated = mockMvc.perform(put(getRequestUrl(expenseGetDto.id()))
-                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 7.0, Currency.EUR, 2)))
+                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 7.0, Currency.EUR, new ExpenseCategoryGetDto(2,"", ExpenseCategoryType.ESSENTIAL))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -204,7 +206,7 @@ public class ExpenseControllerTest {
     @Test
     void updateExpense_whenExpenseIdIsNotPresentAndDtoIsOk_thenReturnsNotFoundError() throws Exception {
         mockMvc.perform(put(getRequestUrl(107))
-                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, 2)))
+                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, new ExpenseCategoryGetDto(2,"", ExpenseCategoryType.ESSENTIAL))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -220,7 +222,7 @@ public class ExpenseControllerTest {
         //given - creating new expense
         MvcResult result = mockMvc
                 .perform(post(EXPENSE_API_URL)
-                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, 2)))
+                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Wine", "Wednesday wine", LocalDate.now(), 5.0, Currency.EUR, new ExpenseCategoryGetDto(2,"", ExpenseCategoryType.ESSENTIAL))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();

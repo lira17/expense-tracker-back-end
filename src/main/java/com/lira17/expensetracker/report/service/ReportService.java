@@ -1,6 +1,7 @@
 package com.lira17.expensetracker.report.service;
 
 import com.lira17.expensetracker.dto.get.CategoryGetDto;
+import com.lira17.expensetracker.exchange.Currency;
 import com.lira17.expensetracker.model.BaseBalanceEntity;
 import com.lira17.expensetracker.model.Expense;
 import com.lira17.expensetracker.model.ExpenseCategory;
@@ -12,6 +13,7 @@ import com.lira17.expensetracker.report.model.ReportBalanceEntity;
 import com.lira17.expensetracker.service.ExpenseService;
 import com.lira17.expensetracker.service.IncomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,9 @@ public class ReportService {
 
     @Autowired
     private IncomeService incomeService;
+
+    @Value("${exchange.main.currency}")
+    private String mainCurrency;
 
     public Report getReportForMonth(Integer month, Integer year) {
         var expenses = expenseService.getMonthlyExpenses(month, year);
@@ -84,6 +89,7 @@ public class ReportService {
         report.setTotalIncome(totalIncome);
         report.setBalancePositive(isBalancePositive(difference));
         report.setDifference(difference);
+        report.setMainCurrency(Currency.valueOf(mainCurrency));
 
         return report;
     }

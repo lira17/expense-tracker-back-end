@@ -1,7 +1,9 @@
 package com.lira17.expensetracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lira17.expensetracker.common.ExpenseCategoryType;
 import com.lira17.expensetracker.dto.create.ExpenseCreateDto;
+import com.lira17.expensetracker.dto.get.ExpenseCategoryGetDto;
 import com.lira17.expensetracker.dto.get.ExpenseGetDto;
 import com.lira17.expensetracker.exchange.Currency;
 import org.junit.jupiter.api.Test;
@@ -53,7 +55,7 @@ public class TotalBalanceControllerTest {
     void getTotalBalance_whenBalanceIsNegative_thenReturnsDtoWithNegativeBalance() throws Exception {
         //given - adding new expense
         MvcResult result = mockMvc.perform(post(EXPENSE_API_URL)
-                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Apartment", "Bough", LocalDate.now(), 450000.0, Currency.RSD, 1)))
+                        .content(mapper.writeValueAsString(new ExpenseCreateDto("Apartment", "Bough", LocalDate.now(), 450000.0, Currency.RSD, new ExpenseCategoryGetDto(1, "", ExpenseCategoryType.ESSENTIAL))))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
